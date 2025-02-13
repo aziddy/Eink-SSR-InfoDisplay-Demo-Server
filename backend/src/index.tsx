@@ -16,19 +16,34 @@ const port = 3000
 app.use(cors())
 app.use(express.json())
 
-// Example JSON: { "template": "<div style=\"color: blue\">Hello World</div><div style=\"background-color: lightgrey;color: blue; padding: 10px; border-radius: 25px;\">2nd</div>"}
+// Example JSON: { 
+//   "template": "<div style=\"color: {{textColor}}\">Hello {{name}}</div><div style=\"background-color: {{bgColor}};color: blue; padding: 10px; border-radius: 25px;\">{{message}}</div>",
+//   "variables": {
+//     "textColor": "blue",
+//     "name": "World",
+//     "bgColor": "lightgrey",
+//     "message": "Welcome!"
+//   }
+// }
 app.post('/api/generate', async (req, res) => {
   try {
-    const { template } = req.body
+    const { template, variables = {} } = req.body
 
     if (!template) {
       return res.status(400).json({ error: 'Template is required' })
     }
 
+    // Replace variables in the template
+    let processedTemplate = template
+    Object.entries(variables).forEach(([key, value]) => {
+      const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g')
+      processedTemplate = processedTemplate.replace(regex, String(value))
+    })
+
     // Parse HTML to React elements
     // @ts-ignore
     const htmlToReactParser = new HtmlToReactParser()
-    const reactElement = htmlToReactParser.parse(template)
+    const reactElement = htmlToReactParser.parse(processedTemplate)
 
     // Create the OG image using JSX
     const element = (

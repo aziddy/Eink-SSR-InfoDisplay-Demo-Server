@@ -1,0 +1,11 @@
+curl --location 'http://localhost:3000/api/generate/from-req-unsafe' \
+--header 'Content-Type: application/json' \
+--data '{
+  "template": "<div style=\"color: {{textColor}}\">Hello {{name}}</div><div style=\"background-color: {{bgColor}};padding: 10px;\">{{message}}</div>",
+  "variables": {
+    "textColor": "blue",
+    "name": "John",
+    "bgColor": "lightgrey",
+    "message": "Welcome to our site!"
+  }
+}'

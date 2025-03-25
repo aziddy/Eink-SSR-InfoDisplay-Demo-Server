@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "6c4efe9e-4714-4685-886b-07d155f49c2b",
+		"name": "templateAndVariablesInRequest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32044322"
+	},
+	"item": [
+		{
+			"name": "/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"template\": \"<div style=\\\"color: {{textColor}}\\\">Hello {{name}}</div><div style=\\\"background-color: {{bgColor}};padding: 10px;\\\">{{message}}</div>\",\n  \"variables\": {\n    \"textColor\": \"blue\",\n    \"name\": \"John\",\n    \"bgColor\": \"lightgrey\",\n    \"message\": \"Welcome to our site!\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		}
+	]
+}

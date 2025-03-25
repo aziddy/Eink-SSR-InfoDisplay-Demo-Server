@@ -6,9 +6,11 @@
     "license": "MIT",
     "scripts": {
         "dev": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm src/index.tsx",
+        "dev:watch": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' nodemon --exec ts-node --esm src/index.tsx",
         "build": "tsc",
         "start": "node dist/index.js",
-        "demo:basicCalendarEvent": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm examples/basicCalendarEventDemo/demo.tsx"
+        "demo:basicCalendarEvent": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm examples/basicCalendarEventDemo/demo.tsx",
+        "demo:templateAndVariablesInRequest": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm examples/templateAndVariablesInRequest/demo.tsx"
     },
     "dependencies": {
         "@vercel/og": "^0.6.2",
@@ -27,6 +29,7 @@
         "@types/node": "^20.11.17",
         "@types/react": "^18.2.0",
         "@types/react-dom": "^18.2.0",
+        "nodemon": "^3.0.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.3.3"
     }

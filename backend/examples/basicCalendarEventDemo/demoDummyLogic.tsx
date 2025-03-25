@@ -1,23 +1,26 @@
-export type CalendarEvent = {
+export type CalendarEventType = {
     title: string
     description: string
     date: string
 }
 
-export type Calendar = {
+export type CalendarType = {
     title: string
     description: string
-    events: CalendarEvent[]
+    events: CalendarEventType[]
 }
 
-export type LiquidTemplate = {
+export type DemoLiquidTemplateType = {
     liquidTemplate: string
+    targetScreenWidth: number
+    targetScreenHeight: number
+    targetDevice?: string
     createdAt: string
     updatedAt: string
 }
 
 
-export const demoLiquidTemplateData: Record<number, LiquidTemplate> = {
+export const demoLiquidTemplateData: Record<number, DemoLiquidTemplateType> = {
     3749387394: {
         liquidTemplate: `
             {% for event in events %}
@@ -28,12 +31,14 @@ export const demoLiquidTemplateData: Record<number, LiquidTemplate> = {
                 </div>
             {% endfor %}    
         `,
+        targetScreenWidth: 1000,
+        targetScreenHeight: 430,
         createdAt: '2024-01-01',
         updatedAt: '2025-01-01',
     }
 }
 
-export const demoCalendarDataTable: Record<number, Calendar> = {
+export const demoCalendarDataTable: Record<number, CalendarType> = {
     42069: {
         title: 'Alex\'s Calendar',
         description: 'This is Alex\'s demo calendar',
@@ -57,6 +62,17 @@ export const demoCalendarDataTable: Record<number, Calendar> = {
     }
 }
 
+export function demoCheckJWT(jwt: string | undefined) {
+    // JWT Check Code ...
+    return { userid: 42069 }
+}
 
+export function demoGetCalendarData(id: number) {
+    return demoCalendarDataTable[id]
+}
+
+export function demoGetLiquidTemplate(id: string | undefined): DemoLiquidTemplateType {
+    return demoLiquidTemplateData[3749387394]
+}
 
 

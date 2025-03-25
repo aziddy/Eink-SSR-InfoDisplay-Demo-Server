@@ -9,7 +9,6 @@ import type { Parser } from 'html-to-react'
 import { Liquid } from 'liquidjs'
 import path from 'path'
 import { templateReactWrapper_1 } from './util-react-wrappers'
-import demo from './demo'
 
 declare module 'liquidjs' {
     export default class Liquid {
@@ -27,8 +26,8 @@ const port = 3000
 app.use(cors())
 app.use(express.json())
 
-// Mount the demo router under /api
-app.use('/api', demo)
+// // Mount the demo router under /api
+// app.use('/api', demo)
 
 app.post('/api/generate/from-req-unsafe', async (req, res) => {
     try {

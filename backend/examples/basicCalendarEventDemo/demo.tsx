@@ -1,79 +1,38 @@
+
+
+
 import express from 'express'
 import cors from 'cors'
 import { ImageResponse } from '@vercel/og'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import React from 'react'
 import { Parser as HtmlToReactParser } from 'html-to-react'
-import type { Parser } from 'html-to-react'
 import { Liquid } from 'liquidjs'
 import path from 'path'
-import { templateReactWrapper_2 } from './util-react-wrappers'
+import { templateReactWrapper_demo1 } from './demo-util-react-wrappers'
+
+declare module 'liquidjs' {
+    export default class Liquid {
+        constructor(options: { root: string; extname: string })
+        parseAndRender(template: string, variables: Record<string, any>): Promise<string>
+    }
+}
+
+import {
+    CalendarEvent, Calendar, LiquidTemplate,
+    demoCalendarDataTable, demoLiquidTemplateData
+} from './demoDummyLogic'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const router = express.Router()
+const app = express()
+const port = 3000
 
-type CalendarEvent = {
-    title: string
-    description: string
-    date: string
-}
+app.use(cors())
+app.use(express.json())
 
-type Calendar = {
-    title: string
-    description: string
-    events: CalendarEvent[]
-}
 
-type LiquidTemplate = {
-    liquidTemplate: string
-    createdAt: string
-    updatedAt: string
-}
-
-const demoLiquidTemplateData: Record<number, LiquidTemplate> = {
-    3749387394: {
-        liquidTemplate: `
-            {% for event in events %}
-                <div style="background-color: cyan; width: 100%; display: flex; flex-direction: column; margin-bottom: 5px; border-radius: 10px; padding: 10px;">
-                    <div>{{ event.title }}</div>
-                    <div>{{ event.description }}</div>
-                    <div>{{ event.date }}</div>
-                </div>
-            {% endfor %}    
-        `,
-        createdAt: '2024-01-01',
-        updatedAt: '2025-01-01',
-    }
-}
-
-const demoCalendarDataTable: Record<number, Calendar> = {
-    42069: {
-        title: 'Alex\'s Calendar',
-        description: 'This is Alex\'s demo calendar',
-        events: [
-            {
-                title: 'Event 1',
-                description: 'This is the first event',
-                date: '2024-01-01',
-            },
-            {
-                title: 'Event 2',
-                description: 'This is the second event',
-                date: '2024-01-02',
-            },
-            {
-                title: 'Event 3',
-                description: 'This is the third event',
-                date: '2024-01-03',
-            },
-        ],
-    }
-}
-
-// 
 function demoCheckJWT(jwt: string | undefined) {
     // JWT Check Code ...
     return { userid: 42069 }
@@ -88,9 +47,8 @@ function demoGetLiquidTemplate(id: string | undefined): LiquidTemplate {
 }
 
 
-router.post('/demo', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
-
         const user = demoCheckJWT(req.headers.authorization)
         const userCalendarData: Calendar = demoGetCalendarData(user.userid)
         const liquidTemplateData = demoGetLiquidTemplate(req.body.templateId as string)
@@ -117,7 +75,7 @@ router.post('/demo', async (req, res) => {
         const reactElement = htmlToReactParser.parse(renderedLiquidTemplate)
 
         // Create the OG image using JSX
-        const componentToRenderAsImage = templateReactWrapper_2(reactElement);
+        const componentToRenderAsImage = templateReactWrapper_demo1(reactElement);
 
         const generatedImage = new ImageResponse(componentToRenderAsImage, {
             width: 1000,
@@ -134,6 +92,7 @@ router.post('/demo', async (req, res) => {
         res.setHeader('Cache-Control', 'public, max-age=86400, immutable')
 
         // Send the image buffer
+        console.log('Sending image!')
         res.send(Buffer.from(buffer))
     } catch (error) {
         console.error('Error generating image:', error)
@@ -141,4 +100,6 @@ router.post('/demo', async (req, res) => {
     }
 })
 
-export default router
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`)
+}) 

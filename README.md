@@ -1,53 +1,32 @@
-# OG Image Generator
+# Eink-SSR-InfoDisplay-Demo-Server
 
-A monorepo project for generating Open Graph images using Vercel's OG library. The project consists of a React frontend with Monaco editor for HTML template editing and a Node.js backend for image generation.
+<div align="center">
+  <img src="./media/demo1-25Mar2025.gif" alt="Demo" width="500">
+</div>
 
-## Project Structure
 
+## Init
+```bash
+cd backend
+npm install
 ```
-.
-├── frontend/         # React frontend application
-├── backend/         # Express backend server
-└── package.json     # Root package.json for workspace management
-```
 
-## Prerequisites
+## Run Examples
 
-- Node.js (v16 or later)
-- Yarn package manager
 
-## Setup
+### Example 1: Generate Image from Liquid Template and Variables Defined in Request
+- Run
+    ```bash
+    npm run demo:templateAndVariablesInRequest
+    ```
+- Endpoint accessible at: POST `http://localhost:3000/`
+    - ⚠️ JSON Payload Required ⚠️
+        - Examples requests can be found in `../examples/templateAndVariablesInRequest/exampleReqToDemoServer`
 
-1. Install dependencies:
-   ```bash
-   yarn install
-   ```
+### Example 2: Generate Image from Liquid Template and Variables Defined on Server
+- Run
+    ```bash
+    npm run demo:exampleCalendarEvent
+    ```
+- Endpoint accessible at: GET `http://localhost:3000/`
 
-2. Start the development servers:
-   ```bash
-   # Start both frontend and backend
-   yarn dev
-
-   # Or start them separately:
-   yarn frontend  # Starts frontend on port 5173
-   yarn backend   # Starts backend on port 3000
-   ```
-
-## Usage
-
-1. Open your browser and navigate to `http://localhost:5173`
-2. Use the Monaco editor to write your HTML template
-3. Click "Generate Image" to create an OG image
-4. The generated image will appear in the preview panel
-
-## Features
-
-- Live HTML template editing with Monaco Editor
-- Real-time image preview
-- Vercel OG image generation
-- TypeScript support
-- Modern UI with Tailwind CSS
-
-## License
-
-MIT

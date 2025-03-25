@@ -12,7 +12,7 @@ export function templateReactWrapper_1(reactElement: ReactElement) {
                 justifyContent: 'center',
                 backgroundColor: 'white',
                 position: 'relative',
-                filter: 'grayscale(100%)',
+                // filter: 'grayscale(100%)',
             }}
         >
             <div
@@ -23,7 +23,7 @@ export function templateReactWrapper_1(reactElement: ReactElement) {
                     justifyContent: 'center',
                     textAlign: 'center',
                     fontSize: 60,
-                    fontWeight: 700,
+                    fontWeight: 900,
                     fontFamily: 'Inter',
                     background: 'white',
                     color: 'black',

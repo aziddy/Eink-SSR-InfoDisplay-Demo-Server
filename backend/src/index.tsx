@@ -6,6 +6,17 @@ import { dirname } from 'path'
 import React from 'react'
 import { Parser as HtmlToReactParser } from 'html-to-react'
 import type { Parser } from 'html-to-react'
+import { Liquid } from 'liquidjs'
+import path from 'path'
+import { templateReactWrapper_1 } from './util-react-wrappers'
+import demo from './demo'
+
+declare module 'liquidjs' {
+    export default class Liquid {
+        constructor(options: { root: string; extname: string })
+        parseAndRender(template: string, variables: Record<string, any>): Promise<string>
+    }
+}
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -16,95 +27,56 @@ const port = 3000
 app.use(cors())
 app.use(express.json())
 
-// Example JSON: { 
-//   "template": "<div style=\"color: {{textColor}}\">Hello {{name}}</div><div style=\"background-color: {{bgColor}};color: blue; padding: 10px; border-radius: 25px;\">{{message}}</div>",
-//   "variables": {
-//     "textColor": "blue",
-//     "name": "World",
-//     "bgColor": "lightgrey",
-//     "message": "Welcome!"
-//   }
-// }
-app.post('/api/generate', async (req, res) => {
-  try {
-    const { template, variables = {} } = req.body
+// Mount the demo router under /api
+app.use('/api', demo)
 
-    if (!template) {
-      return res.status(400).json({ error: 'Template is required' })
+app.post('/api/generate/from-req-unsafe', async (req, res) => {
+    try {
+        const { template, variables = {} } = req.body
+
+        if (!template) {
+            return res.status(400).json({ error: 'Template is required' })
+        }
+
+        const liquid = new Liquid({
+            root: path.resolve(__dirname, 'templates'),
+            extname: '.liquid',
+        })
+
+        // Liquid automatically escapes variables by default
+        // it automatically HTML-escapes the content to prevent XSS
+        const renderedLiquidTemplate = await liquid.parseAndRender(template, variables)
+
+        // Parse HTML to React elements
+        // @ts-ignore
+        const htmlToReactParser = new HtmlToReactParser()
+        const reactElement = htmlToReactParser.parse(renderedLiquidTemplate)
+
+        // Create the OG image using JSX
+        const componentToRenderAsImage = templateReactWrapper_1(reactElement);
+
+        const generatedImage = new ImageResponse(componentToRenderAsImage, {
+            width: 1000,
+            height: 430,
+            debug: false,
+            emoji: 'twemoji',
+        })
+
+        // Get the image buffer
+        const buffer = await generatedImage.arrayBuffer()
+
+        // Set the appropriate headers
+        res.setHeader('Content-Type', 'image/png')
+        res.setHeader('Cache-Control', 'public, max-age=86400, immutable')
+
+        // Send the image buffer
+        res.send(Buffer.from(buffer))
+    } catch (error) {
+        console.error('Error generating image:', error)
+        res.status(500).json({ error: 'Failed to generate image' })
     }
-
-    // Replace variables in the template
-    let processedTemplate = template
-    Object.entries(variables).forEach(([key, value]) => {
-      const regex = new RegExp(`{{\\s*${key}\\s*}}`, 'g')
-      processedTemplate = processedTemplate.replace(regex, String(value))
-    })
-
-    // Parse HTML to React elements
-    // @ts-ignore
-    const htmlToReactParser = new HtmlToReactParser()
-    const reactElement = htmlToReactParser.parse(processedTemplate)
-
-    // Create the OG image using JSX
-    const element = (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'white',
-          position: 'relative',
-          filter: 'grayscale(100%)',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            fontSize: 60,
-            fontWeight: 700,
-            fontFamily: 'Inter',
-            background: 'white',
-            color: 'black',
-            width: '100%',
-            height: '100%',
-            padding: '20px 50px',
-            lineHeight: 1.4,
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {reactElement}
-        </div>
-      </div>
-    )
-
-    const imageResponse = new ImageResponse(element, {
-      width: 1000,
-      height: 430,
-      debug: false,
-      emoji: 'twemoji',
-    })
-
-    // Get the image buffer
-    const buffer = await imageResponse.arrayBuffer()
-
-    // Set the appropriate headers
-    res.setHeader('Content-Type', 'image/png')
-    res.setHeader('Cache-Control', 'public, max-age=86400, immutable')
-
-    // Send the image buffer
-    res.send(Buffer.from(buffer))
-  } catch (error) {
-    console.error('Error generating image:', error)
-    res.status(500).json({ error: 'Failed to generate image' })
-  }
 })
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`)
+    console.log(`Server running at http://localhost:${port}`)
 }) 

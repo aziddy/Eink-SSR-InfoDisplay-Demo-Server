@@ -10,6 +10,7 @@ import { Parser as HtmlToReactParser } from 'html-to-react'
 import { Liquid } from 'liquidjs'
 import path from 'path'
 import { templateReactWrapper_demo1 } from './demo-util-react-wrappers'
+import { isNetworkAccessEnabled, printExternalNetworkIPs } from '../../src/utils/localNetworkUtil'
 import {
     CalendarType, DemoLiquidTemplateType,
     demoCheckJWT, demoGetCalendarData, demoGetLiquidTemplate
@@ -49,8 +50,8 @@ app.get('/', async (req, res) => {
         const componentToRenderAsImage = templateReactWrapper_demo1(reactElement);
 
         const generatedImage = new ImageResponse(componentToRenderAsImage, {
-            width: 1000,
-            height: 430,
+            width: 960,
+            height: 540,
             debug: false,
             emoji: 'twemoji',
         })
@@ -71,6 +72,15 @@ app.get('/', async (req, res) => {
     }
 })
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`)
+
+const host = isNetworkAccessEnabled ? '0.0.0.0' : 'localhost';
+
+app.listen(port, host, () => {
+    console.log('\n🚀 Server is running!')
+    console.log(`\nLocal: http://localhost:${port}`)
+
+    if (isNetworkAccessEnabled) {
+        printExternalNetworkIPs(port)
+    }
+    console.log('\n');
 }) 

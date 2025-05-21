@@ -3,8 +3,13 @@ import { ReactElement } from "react";
 import { Parser as HtmlToReactParser } from 'html-to-react'
 import { ImageResponse } from '@vercel/og'
 
-
-export async function generateImage(liquidTemplate: string, liquidVariables: Record<string, any>, templateReactWrapperFunction: (reactElement: ReactElement) => JSX.Element): Promise<ArrayBuffer> {
+export async function generateImage(
+    width: number = 960,
+    height: number = 540,
+    liquidTemplate: string,
+    liquidVariables: Record<string, any>,
+    templateReactWrapperFunction: (reactElement: ReactElement) => JSX.Element
+): Promise<ArrayBuffer> {
     const liquid = new Liquid()
 
     // Liquid automatically escapes variables by default
@@ -19,13 +24,14 @@ export async function generateImage(liquidTemplate: string, liquidVariables: Rec
     // Create the OG image using JSX
     const componentToRenderAsImage = templateReactWrapperFunction(reactElement);
 
+    // Image returned in a 
     const generatedImage = new ImageResponse(componentToRenderAsImage, {
-        width: 800,
-        height: 430,
+        width: width,
+        height: height,
         debug: false,
         emoji: 'twemoji',
     })
 
-    // Get the image buffer
+    // Get the image data as an ArrayBuffer, in encoded PNG format
     return generatedImage.arrayBuffer()
 }

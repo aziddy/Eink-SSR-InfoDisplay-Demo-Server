@@ -6,10 +6,15 @@
     "license": "MIT",
     "scripts": {
         "dev": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm src/index.tsx",
+        "dev:extNetwork": "NETWORK_ACCESS=true NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm src/index.tsx",
         "dev:watch": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' nodemon --exec ts-node --esm src/index.tsx",
         "build": "tsc",
         "start": "node dist/index.js",
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+        "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+        "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
         "demo:basicCalendarEvent": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm examples/basicCalendarEventDemo/demo.tsx",
+        "demo:basicCalendarEvent:extNetwork": "NETWORK_ACCESS=true NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm examples/basicCalendarEventDemo/demo.tsx",
         "demo:templateAndVariablesInRequest": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm examples/templateAndVariablesInRequest/demo.tsx"
     },
     "dependencies": {
@@ -26,10 +31,15 @@
     "devDependencies": {
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
+        "@types/jest": "^29.5.14",
         "@types/node": "^20.11.17",
         "@types/react": "^18.2.0",
         "@types/react-dom": "^18.2.0",
+        "@types/supertest": "^6.0.3",
+        "jest": "^29.7.0",
         "nodemon": "^3.0.3",
+        "supertest": "^7.1.0",
+        "ts-jest": "^29.3.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.3.3"
     }

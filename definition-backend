@@ -1,0 +1,13 @@
+{
+    "schemaVersion": 2,
+    "dockerfileLines": [
+        "FROM node:18-alpine",
+        "WORKDIR /app",
+        "COPY ./backend/package*.json ./",
+        "RUN npm ci",
+        "COPY ./backend .",
+        "ENV NETWORK_ACCESS=true",
+        "EXPOSE 3000",
+        "CMD [\"npm\", \"start\"]"
+    ]
+}

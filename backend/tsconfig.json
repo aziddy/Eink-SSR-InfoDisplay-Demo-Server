@@ -17,7 +17,10 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "jsx": "react-jsx",
-        "jsxImportSource": "react"
+        "jsxImportSource": "react",
+        "emitDeclarationOnly": false,
+        "declaration": true,
+        "noEmit": false
     },
     "ts-node": {
         "esm": true,

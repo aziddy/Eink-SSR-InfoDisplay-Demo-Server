@@ -1,15 +1,15 @@
 {
     "name": "backend",
     "version": "1.0.0",
-    "main": "src/index.tsx",
+    "main": "dist/index.js",
     "type": "module",
     "license": "MIT",
     "scripts": {
         "dev": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm src/index.tsx",
         "dev:extNetwork": "NETWORK_ACCESS=true NODE_OPTIONS='--loader ts-node/esm --no-warnings' ts-node --esm src/index.tsx",
         "dev:watch": "NODE_OPTIONS='--loader ts-node/esm --no-warnings' nodemon --exec ts-node --esm src/index.tsx",
-        "build": "tsc",
-        "start": "node dist/index.js",
+        "build": "tsc && tsc-alias",
+        "start": "NODE_OPTIONS='--experimental-specifier-resolution=node --loader ts-node/esm' node dist/index.js",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest",
         "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
         "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
@@ -25,6 +25,7 @@
         "liquidjs": "^10.21.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "sharp": "^0.34.2",
         "sqlite3": "^5.1.7",
         "typeorm": "^0.3.20"
     },
@@ -41,6 +42,7 @@
         "supertest": "^7.1.0",
         "ts-jest": "^29.3.0",
         "ts-node": "^10.9.2",
+        "tsc-alias": "^1.8.16",
         "typescript": "^5.3.3"
     }
 }

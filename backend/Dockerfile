@@ -13,6 +13,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+RUN npm run build
+
 ENV NETWORK_ACCESS=true
 
 # Expose port

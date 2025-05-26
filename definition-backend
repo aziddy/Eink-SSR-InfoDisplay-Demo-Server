@@ -6,6 +6,7 @@
         "COPY ./backend/package*.json ./",
         "RUN npm ci",
         "COPY ./backend .",
+        "RUN npm run build",
         "ENV NETWORK_ACCESS=true",
         "EXPOSE 3000",
         "CMD [\"npm\", \"start\"]"
